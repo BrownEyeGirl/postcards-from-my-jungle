@@ -1,4 +1,5 @@
 # xerflies-study
+<img width="1024" height="256" alt="xerflies-example" src="https://github.com/user-attachments/assets/c1dd03e4-7287-4eee-9f48-67210174af04" />
 
 ### Concept Intro
 The flutter of butterflies reminds me of the shallow breaths I was restricted to take when I had pnemonia. I wanted to create a hybrid

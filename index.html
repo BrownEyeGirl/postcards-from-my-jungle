@@ -17,17 +17,13 @@
         transform: translateX(50%);
         display: flex;
         align-items: center;
-        gap: 0.85rem;
+        gap: 0.6rem;
         width: min(22rem, calc(100vw - 2rem));
-        padding: 0.75rem 1rem;
-        border: 1px solid rgb(255 255 255 / 16%);
-        border-radius: 999px;
-        background: rgb(17 24 19 / 88%);
+        padding: 0.4rem 0;
         color: #f2f5ed;
         font: 500 0.9rem/1 system-ui, sans-serif;
-        backdrop-filter: blur(10px);
       }
-      .image-picker input[type="range"] { flex: 1; accent-color: #b9d978; }
+      .image-picker input[type="range"] { flex: 1; accent-color: #f2f5ed; }
       .image-picker output { min-width: 1ch; text-align: center; }
       .xerfly-gallery {
         position: fixed;
@@ -45,12 +41,9 @@
         position: relative;
         min-width: 0;
         overflow: hidden;
-        border: 1px solid rgb(255 255 255 / 16%);
-        background: rgb(17 24 19 / 88%);
         color: #f2f5ed;
         text-align: center;
-        font: 500 clamp(0.5rem, 1.1vw, 0.75rem)/1.2 system-ui, sans-serif;
-        backdrop-filter: blur(10px);
+        font: 400 clamp(0.55rem, 1.1vw, 0.75rem)/1.2 system-ui, sans-serif;
       }
       .xerfly-card img {
         display: block;
@@ -60,8 +53,7 @@
         border-radius: 0;
       }
       .xerfly-card figcaption {
-        padding: 0.35rem 0.2rem;
-        overflow-wrap: anywhere;
+        padding: 0.25rem 0.1rem;
       }
       .xerfly-toggle {
         position: absolute;
@@ -104,14 +96,14 @@
   </head>
   <body>
     <section class="xerfly-gallery" aria-label="Latest xerfly images">
-      <figure class="xerfly-card"><img src="./xerflies/boreal-xerfly/Screenshot 2026-10-28 at 9.40.44%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show boreal-xerfly"><input type="checkbox" data-butterfly="0" checked></label><figcaption>boreal-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/desert-xerfly/Screenshot 2026-10-28 at 9.38.49%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show desert-xerfly"><input type="checkbox" data-butterfly="1" checked></label><figcaption>desert-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/fulgid-xerfly/Screenshot 2026-10-28 at 9.43.15%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show fulgid-xerfly"><input type="checkbox" data-butterfly="2" checked></label><figcaption>fulgid-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/gloaming-xerfly/Screenshot 2026-10-28 at 9.37.09%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show gloaming-xerfly"><input type="checkbox" data-butterfly="3" checked></label><figcaption>gloaming-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/juniper-xerfly/Screenshot 2026-10-28 at 9.40.08%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show juniper-xerfly"><input type="checkbox" data-butterfly="4" checked></label><figcaption>juniper-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/silt-xerfly/Screenshot 2026-10-28 at 9.38.05%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show silt-xerfly"><input type="checkbox" data-butterfly="5" checked></label><figcaption>silt-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/sintered-xerfly/Screenshot 2026-10-28 at 9.42.33%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show sintered-xerfly"><input type="checkbox" data-butterfly="6" checked></label><figcaption>sintered-xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/verdant-xerfly/Screenshot 2026-10-28 at 9.41.32%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show verdant-xerfly"><input type="checkbox" data-butterfly="7" checked></label><figcaption>verdant-xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/boreal-xerfly/Screenshot 2026-10-28 at 9.40.44%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show boreal-xerfly"><input type="checkbox" data-butterfly="0" checked></label><figcaption>boreal-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/desert-xerfly/Screenshot 2026-10-28 at 9.38.49%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show desert-xerfly"><input type="checkbox" data-butterfly="1" checked></label><figcaption>desert-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/fulgid-xerfly/Screenshot 2026-10-28 at 9.43.15%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show fulgid-xerfly"><input type="checkbox" data-butterfly="2" checked></label><figcaption>fulgid-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/gloaming-xerfly/Screenshot 2026-10-28 at 9.37.09%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show gloaming-xerfly"><input type="checkbox" data-butterfly="3" checked></label><figcaption>gloaming-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/juniper-xerfly/Screenshot 2026-10-28 at 9.40.08%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show juniper-xerfly"><input type="checkbox" data-butterfly="4" checked></label><figcaption>juniper-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/silt-xerfly/Screenshot 2026-10-28 at 9.38.05%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show silt-xerfly"><input type="checkbox" data-butterfly="5" checked></label><figcaption>silt-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/sintered-xerfly/Screenshot 2026-10-28 at 9.42.33%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show sintered-xerfly"><input type="checkbox" data-butterfly="6" checked></label><figcaption>sintered-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/verdant-xerfly/Screenshot 2026-10-28 at 9.41.32%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show verdant-xerfly"><input type="checkbox" data-butterfly="7" checked></label><figcaption>verdant-<br>xerfly</figcaption></figure>
     </section>
     <label class="image-picker" for="butterfly-image">
       <span id="butterfly-stage">Pupa</span>

@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 
-const FLOCK_SIZE = 8;
+const BUTTERFLY_IMAGE_SETS = [
+  ['boreal-xerfly', ['9.40.29', '9.40.31', '9.40.34', '9.40.35', '9.40.37', '9.40.42', '9.40.44']],
+  ['desert-xerfly', ['9.38.33', '9.38.38', '9.38.40', '9.38.42', '9.38.44', '9.38.46', '9.38.49']],
+  ['fulgid-xerfly', ['9.43.03', '9.43.05', '9.43.07', '9.43.09', '9.43.10', '9.43.13', '9.43.15']],
+  ['gloaming-xerfly', ['9.36.42', '9.36.47', '9.36.53', '9.36.58', '9.37.01', '9.37.05', '9.37.09']],
+  ['juniper-xerfly', ['9.39.54', '9.39.57', '9.39.59', '9.40.01', '9.40.03', '9.40.06', '9.40.08']],
+  ['silt-xerfly', ['9.37.45', '9.37.53', '9.37.55', '9.37.58', '9.38.01', '9.38.03', '9.38.05']],
+  ['sintered-xerfly', ['9.42.18', '9.42.22', '9.42.24', '9.42.27', '9.42.29', '9.42.31', '9.42.33']],
+  ['verdant-xerfly', ['9.41.15', '9.41.18', '9.41.20', '9.41.23', '9.41.25', '9.41.27', '9.41.32']],
+];
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x111813);
 
@@ -35,11 +44,13 @@ function createButterfly(leftTexture, rightTexture, index) {
     const geometry = new THREE.PlaneGeometry(1.65, 3.3);
     geometry.translate(side * 0.825, 0, 0);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-    hinge.add(new THREE.Mesh(geometry, material));
+    const mesh = new THREE.Mesh(geometry, material);
+    hinge.add(mesh);
+    return mesh;
   }
 
-  addWing(leftHinge, -1, leftTexture);
-  addWing(rightHinge, 1, rightTexture);
+  const leftWing = addWing(leftHinge, -1, leftTexture);
+  const rightWing = addWing(rightHinge, 1, rightTexture);
   root.add(leftHinge, rightHinge);
   root.scale.setScalar(0.43);
   scene.add(root);
@@ -63,10 +74,11 @@ function createButterfly(leftTexture, rightTexture, index) {
     velocity,
     acceleration: new THREE.Vector3(),
     position: root.position,
+    wings: [leftWing, rightWing],
   };
 }
 
-function buildFlock(image) {
+function cropWingTextures(image) {
   const splitX = Math.floor(image.width / 2);
 
   function cropTexture(x, width) {
@@ -79,25 +91,68 @@ function buildFlock(image) {
     return texture;
   }
 
-  const leftTexture = cropTexture(0, splitX);
-  const rightTexture = cropTexture(splitX, image.width - splitX);
-
-  for (let i = 0; i < FLOCK_SIZE; i += 1) {
-    const agent = createButterfly(leftTexture, rightTexture, i);
-    agent.position.set(randomBetween(-4, 4), randomBetween(-2.8, 2.8), randomBetween(-2.5, 2.5));
-    agents.push(agent);
-  }
+  return [cropTexture(0, splitX), cropTexture(splitX, image.width - splitX)];
 }
 
-new THREE.TextureLoader().load(
-  './images/fly.jpeg',
-  (texture) => {
-    buildFlock(texture.image);
-    texture.dispose();
-  },
-  undefined,
-  (error) => console.error('Could not load ./images/fly.jpeg', error),
-);
+function buildButterfly(textureSets, index) {
+  const selectedTextures = textureSets[Number(butterflySlider.value) - 1];
+  const agent = createButterfly(...selectedTextures, index);
+  agent.textureSets = textureSets;
+  agent.root.visible = document.querySelector(`[data-butterfly="${index}"]`).checked;
+  agent.position.set(randomBetween(-4, 4), randomBetween(-2.8, 2.8), randomBetween(-2.5, 2.5));
+  agents.push(agent);
+}
+
+const textureLoader = new THREE.TextureLoader();
+function loadTexture(path) {
+  return new Promise((resolve, reject) => {
+    textureLoader.load(path, resolve, undefined, reject);
+  });
+}
+
+const butterflySlider = document.querySelector('#butterfly-image');
+const butterflyStage = document.querySelector('#butterfly-stage');
+document.querySelectorAll('[data-butterfly]').forEach((checkbox) => {
+  checkbox.addEventListener('change', () => {
+    const agent = agents[Number(checkbox.dataset.butterfly)];
+    if (agent) agent.root.visible = checkbox.checked;
+  });
+});
+
+function updateButterflyStage() {
+  butterflyStage.textContent = Number(butterflySlider.value) === 1 ? 'Pupa'
+    : Number(butterflySlider.value) === 7 ? 'Imago'
+      : butterflySlider.value;
+}
+
+butterflySlider.addEventListener('input', () => {
+  const imageIndex = Number(butterflySlider.value) - 1;
+  updateButterflyStage();
+  agents.forEach((agent) => {
+    agent.wings.forEach((wing, side) => {
+      wing.material.map = agent.textureSets[imageIndex][side];
+      wing.material.needsUpdate = true;
+    });
+  });
+});
+updateButterflyStage();
+
+Promise.all(BUTTERFLY_IMAGE_SETS.map(([folder, timestamps]) => Promise.all(timestamps.map((timestamp) => {
+  const paddedTimestamp = timestamp.split('.').map((part, index) => index === 0 ? part : part.padStart(2, '0')).join('.');
+  const path = `./xerflies/${folder}/Screenshot 2026-10-28 at ${paddedTimestamp}\u202fPM.png`;
+  return loadTexture(path);
+}))))
+  .then((folderTextures) => {
+    folderTextures.forEach((textures, index) => {
+      const textureSets = textures.map((texture) => {
+        const wings = cropWingTextures(texture.image);
+        texture.dispose();
+        return wings;
+      });
+      buildButterfly(textureSets, index);
+    });
+  })
+  .catch((error) => console.error('Could not load butterfly images from ./xerflies', error));
 
 // Simple 3D boids: separation, alignment, cohesion, and soft screen-volume bounds.
 const NEIGHBOR_RADIUS = 3.4;

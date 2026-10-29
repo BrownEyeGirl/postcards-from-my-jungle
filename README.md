@@ -18,8 +18,8 @@ ai pupa (random noise) to ai imago (fully clarified image), we can watch them gr
 
 ## Audio Generation
 The strategy changes for each type of butterfly, divided into young and old. I used my knowledge of effects and values from live coding 
-to design better audio generation prompts, and after some trial and error, I learned what the machine listens to. The prompts themselves
-are in the sound-generation.ipynb file. 
+to design better audio generation prompts, and after some trial and error, I learned what the machine listens to. The prompts themselves are in the sound-generation.ipynb file. 
+To create the transcriptions of the sounds, I prompted Codex to add a short, gibberish-style phonetic rendering underneath the audio progress bars for each audio. 
 
 ## Quality Improvement Ideas 
 Improvement depends largely on compute power & time available. With better resolution (from 32x32 pixels to 160x160). Further, sound could 

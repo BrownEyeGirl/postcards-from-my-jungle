@@ -3,12 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Butterfly</title>
+    <title>ཐི⋆lepidopterarium⋆ཋྀ</title>
     <style>
       * { box-sizing: border-box; }
       html, body { width: 100%; height: 100%; margin: 0; }
-      body { overflow: hidden; background: #111813; }
+      body { overflow: hidden; background: #fff; font-family: "Courier New", Courier, monospace; }
+      body::after {
+        position: fixed;
+        z-index: 2;
+        inset: 0;
+        border: 0.35rem solid #6b442f;
+        content: "";
+        pointer-events: none;
+      }
       canvas { display: block; width: 100%; height: 100%; }
+      .page-header {
+        position: fixed;
+        z-index: 1;
+        top: max(0.65rem, env(safe-area-inset-top));
+        left: 50%;
+        width: calc(100% - 2rem);
+        transform: translateX(-50%);
+        padding: 0.4rem 0.75rem 0.5rem;
+        color: #6b442f;
+        text-align: center;
+        font-size: clamp(1rem, 2.2vw, 1.6rem);
+        font-weight: 400;
+        line-height: 1.2;
+      }
+      .page-header h1 { margin: 0; font-size: inherit; font-weight: 700; }
+      .page-header p { margin: 0.2rem 0 0; color: #a88d7d; font-size: 0.65em; line-height: 1.2; }
       .image-picker {
         position: fixed;
         z-index: 1;
@@ -20,15 +44,15 @@
         gap: 0.6rem;
         width: min(22rem, calc(100vw - 2rem));
         padding: 0.4rem 0;
-        color: #f2f5ed;
-        font: 500 0.9rem/1 system-ui, sans-serif;
+        color: #6b442f;
+        font: 500 0.9rem/1 "Courier New", Courier, monospace;
       }
-      .image-picker input[type="range"] { flex: 1; accent-color: #f2f5ed; }
-      .image-picker output { min-width: 1ch; text-align: center; }
+      .image-picker input[type="range"] { flex: 1; accent-color: #6b442f; }
+      .image-picker span { flex: 0 0 auto; }
       .xerfly-gallery {
         position: fixed;
         z-index: 1;
-        top: max(1rem, env(safe-area-inset-top));
+        top: max(4rem, calc(env(safe-area-inset-top) + 3rem));
         left: 50%;
         transform: translateX(-50%);
         display: grid;
@@ -41,9 +65,9 @@
         position: relative;
         min-width: 0;
         overflow: hidden;
-        color: #f2f5ed;
+        color: #6b442f;
         text-align: center;
-        font: 400 clamp(0.55rem, 1.1vw, 0.75rem)/1.2 system-ui, sans-serif;
+        font: 400 clamp(0.55rem, 1.1vw, 0.75rem)/1.2 "Courier New", Courier, monospace;
       }
       .xerfly-card img {
         display: block;
@@ -54,7 +78,29 @@
       }
       .xerfly-card figcaption {
         padding: 0.25rem 0.1rem;
+        font-weight: 700;
       }
+      .sound-buttons {
+        display: grid;
+        gap: 0.2rem;
+        width: 100%;
+        padding: 0 0 0.3rem;
+        pointer-events: auto;
+      }
+      .sound-title { padding-bottom: 0.1rem; }
+      .sound-control { display: grid; grid-template-rows: auto auto; justify-items: center; gap: 0.1rem; width: 100%; }
+      .sound-transcription { display: none; margin: 0 0 0.2rem; font-style: italic; line-height: 1.2; overflow-wrap: anywhere; }
+      .sound-transcription.is-playing { display: block; }
+      .sound-buttons button {
+        padding: 0.15rem 0.3rem;
+        border: 1px solid #6b442f;
+        border-radius: 0;
+        background: transparent;
+        color: #6b442f;
+        font: inherit;
+        cursor: pointer;
+      }
+      .sound-control input[type="range"] { display: block; width: 100%; min-width: 0; margin: 0; accent-color: #6b442f; cursor: pointer; }
       .xerfly-toggle {
         position: absolute;
         z-index: 1;
@@ -72,13 +118,13 @@
         height: 1.15rem;
         margin: 0;
         appearance: none;
-        border: 2px solid #111;
+        border: 2px solid #6b442f;
         border-radius: 0;
         background: #fff;
         cursor: pointer;
       }
       .xerfly-toggle input:checked {
-        background: #111;
+        background: #6b442f;
         box-shadow: inset 0 0 0 3px #fff;
       }
       @media (max-width: 600px) {
@@ -95,19 +141,21 @@
     </script>
   </head>
   <body>
+    <header class="page-header"><h1>ཐི⋆lepidopterarium⋆ཋྀ</h1><p>Skyla Trousdale - CART 498</p></header>
     <section class="xerfly-gallery" aria-label="Latest xerfly images">
-      <figure class="xerfly-card"><img src="./xerflies/boreal-xerfly/Screenshot 2026-10-28 at 9.40.44%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show boreal-xerfly"><input type="checkbox" data-butterfly="0" checked></label><figcaption>boreal-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/desert-xerfly/Screenshot 2026-10-28 at 9.38.49%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show desert-xerfly"><input type="checkbox" data-butterfly="1" checked></label><figcaption>desert-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/fulgid-xerfly/Screenshot 2026-10-28 at 9.43.15%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show fulgid-xerfly"><input type="checkbox" data-butterfly="2" checked></label><figcaption>fulgid-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/gloaming-xerfly/Screenshot 2026-10-28 at 9.37.09%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show gloaming-xerfly"><input type="checkbox" data-butterfly="3" checked></label><figcaption>gloaming-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/juniper-xerfly/Screenshot 2026-10-28 at 9.40.08%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show juniper-xerfly"><input type="checkbox" data-butterfly="4" checked></label><figcaption>juniper-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/silt-xerfly/Screenshot 2026-10-28 at 9.38.05%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show silt-xerfly"><input type="checkbox" data-butterfly="5" checked></label><figcaption>silt-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/sintered-xerfly/Screenshot 2026-10-28 at 9.42.33%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show sintered-xerfly"><input type="checkbox" data-butterfly="6" checked></label><figcaption>sintered-<br>xerfly</figcaption></figure>
-      <figure class="xerfly-card"><img src="./xerflies/verdant-xerfly/Screenshot 2026-10-28 at 9.41.32%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show verdant-xerfly"><input type="checkbox" data-butterfly="7" checked></label><figcaption>verdant-<br>xerfly</figcaption></figure>
+      <figure class="xerfly-card"><img src="./xerflies/boreal-xerfly/Screenshot 2026-10-28 at 9.40.44%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show boreal-xerfly"><input type="checkbox" data-butterfly="0" checked></label><figcaption>boreal-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Boreal sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="boreal-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="boreal-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Brru-lee, vhoo-uh, Rrrinn!"</div><div class="sound-control"><button type="button" data-audio="boreal-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="boreal-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Hrrr-oom, vah-lee, Thumm!"</div></div><audio id="boreal-young" src="./sounds/boreal_young.wav" preload="metadata"></audio><audio id="boreal-old" src="./sounds/boreal_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/desert-xerfly/Screenshot 2026-10-28 at 9.38.49%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show desert-xerfly"><input type="checkbox" data-butterfly="1" checked></label><figcaption>desert-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Desert sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="desert-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="desert-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Zhah-rr, mwee-ow, Vrrr-ah!"</div><div class="sound-control"><button type="button" data-audio="desert-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="desert-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Khmm-eh, Raa-voo, zhum!"</div></div><audio id="desert-young" src="./sounds/desert_young.wav" preload="metadata"></audio><audio id="desert-old" src="./sounds/desert_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/fulgid-xerfly/Screenshot 2026-10-28 at 9.43.15%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show fulgid-xerfly"><input type="checkbox" data-butterfly="2" checked></label><figcaption>fulgid-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Fulgid sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="fulgid-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="fulgid-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Fwee-ya, zrrr-lee, Wuh-woh!"</div><div class="sound-control"><button type="button" data-audio="fulgid-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="fulgid-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Humm-vaa, ree-eh, Grr-oo!"</div></div><audio id="fulgid-young" src="./sounds/fulgid_young.wav" preload="metadata"></audio><audio id="fulgid-old" src="./sounds/fulgid_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/gloaming-xerfly/Screenshot 2026-10-28 at 9.37.09%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show gloaming-xerfly"><input type="checkbox" data-butterfly="3" checked></label><figcaption>gloaming-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Gloaming sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="gloaming-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="gloaming-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Vrrr-oww, zhee-uh, Mmm-rrr-ow!"</div><div class="sound-control"><button type="button" data-audio="gloaming-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="gloaming-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Hmmm-vah, rrr-eh-eh, Zhummm!"</div></div><audio id="gloaming-young" src="./sounds/gloaming_young.wav" preload="metadata"></audio><audio id="gloaming-old" src="./sounds/gloaming_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/juniper-xerfly/Screenshot 2026-10-28 at 9.40.08%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show juniper-xerfly"><input type="checkbox" data-butterfly="4" checked></label><figcaption>juniper-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Juniper sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="juniper-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="juniper-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Myee-rr, vwoo-lee, Zhinn!"</div><div class="sound-control"><button type="button" data-audio="juniper-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="juniper-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Hrr-oo, vaa-eh, Mm-zhah!"</div></div><audio id="juniper-young" src="./sounds/juniper_young.wav" preload="metadata"></audio><audio id="juniper-old" src="./sounds/juniper_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/silt-xerfly/Screenshot 2026-10-28 at 9.38.05%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show silt-xerfly"><input type="checkbox" data-butterfly="5" checked></label><figcaption>silt-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Silt sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="silt-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="silt-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Swoo-rr, mmm-ee, Kraa-ow!"</div><div class="sound-control"><button type="button" data-audio="silt-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="silt-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Huh-rr, voo-zhum, Eh-eh!"</div></div><audio id="silt-young" src="./sounds/silt_young.wav" preload="metadata"></audio><audio id="silt-old" src="./sounds/silt_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/sintered-xerfly/Screenshot 2026-10-28 at 9.42.33%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show sintered-xerfly"><input type="checkbox" data-butterfly="6" checked></label><figcaption>sintered-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Sintered sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="sintered-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="sintered-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Kree-uh, vrrr-ree, Woo-nn!"</div><div class="sound-control"><button type="button" data-audio="sintered-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="sintered-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Hmm-rr, zhaa-oom, Eh-vah!"</div></div><audio id="sintered-young" src="./sounds/sintered_young.wav" preload="metadata"></audio><audio id="sintered-old" src="./sounds/sintered_old.wav" preload="metadata"></audio></figure>
+      <figure class="xerfly-card"><img src="./xerflies/verdant-xerfly/Screenshot 2026-10-28 at 9.41.32%E2%80%AFPM.png" alt=""><label class="xerfly-toggle" aria-label="Show verdant-xerfly"><input type="checkbox" data-butterfly="7" checked></label><figcaption>verdant-<br>xerfly</figcaption><div class="sound-buttons" aria-label="Verdant sounds"><div class="sound-title">sound:</div><div class="sound-control"><button type="button" data-audio="verdant-young">play young</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="verdant-young" aria-label="young sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of young sound">"Wee-rr, mrah-lee, Vuh-oo!"</div><div class="sound-control"><button type="button" data-audio="verdant-old">play old</button><input type="range" min="0" max="100" value="0" step="0.1" data-progress="verdant-old" aria-label="old sound progress"></div><div class="sound-transcription" aria-label="Phonetic rendering of old sound">"Hrrr-vah, mmm-zhinn, Ree-ow!"</div></div><audio id="verdant-young" src="./sounds/verdant_young.wav" preload="metadata"></audio><audio id="verdant-old" src="./sounds/verdant_old.wav" preload="metadata"></audio></figure>
     </section>
     <label class="image-picker" for="butterfly-image">
-      <span id="butterfly-stage">Pupa</span>
+      <span>Pupa</span>
       <input id="butterfly-image" type="range" min="1" max="7" step="1" value="1" aria-label="Butterfly life stage">
+      <span>Imago</span>
     </label>
     <script type="module" src="./main.js"></script>
   </body>

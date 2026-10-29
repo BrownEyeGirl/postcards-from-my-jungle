@@ -12,7 +12,7 @@ const BUTTERFLY_IMAGE_SETS = [
   ['verdant-xerfly', ['9.41.15', '9.41.18', '9.41.20', '9.41.23', '9.41.25', '9.41.27', '9.41.32']],
 ];
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x111813);
+scene.background = new THREE.Color(0xffffff);
 
 const camera = new THREE.OrthographicCamera(-8, 8, 5, -5, 0.1, 100);
 camera.position.set(0, 0, 24);
@@ -111,7 +111,6 @@ function loadTexture(path) {
 }
 
 const butterflySlider = document.querySelector('#butterfly-image');
-const butterflyStage = document.querySelector('#butterfly-stage');
 document.querySelectorAll('[data-butterfly]').forEach((checkbox) => {
   checkbox.addEventListener('change', () => {
     const agent = agents[Number(checkbox.dataset.butterfly)];
@@ -119,15 +118,50 @@ document.querySelectorAll('[data-butterfly]').forEach((checkbox) => {
   });
 });
 
-function updateButterflyStage() {
-  butterflyStage.textContent = Number(butterflySlider.value) === 1 ? 'Pupa'
-    : Number(butterflySlider.value) === 7 ? 'Imago'
-      : butterflySlider.value;
-}
+document.querySelectorAll('[data-audio]').forEach((button) => {
+  const audio = document.getElementById(button.dataset.audio);
+  const trackName = button.dataset.audio.endsWith('young') ? 'young' : 'old';
+  const progress = document.querySelector(`[data-progress="${audio.id}"]`);
+  const transcription = progress?.closest('.sound-control')?.nextElementSibling;
+  const updateButton = () => { button.textContent = audio.paused ? `play ${trackName}` : `pause ${trackName}`; };
+  audio.addEventListener('play', () => {
+    updateButton();
+    transcription?.classList.add('is-playing');
+  });
+  audio.addEventListener('pause', () => {
+    updateButton();
+    transcription?.classList.remove('is-playing');
+  });
+  audio.addEventListener('ended', () => {
+    updateButton();
+    transcription?.classList.remove('is-playing');
+  });
+  button.addEventListener('click', () => {
+    document.querySelectorAll('audio').forEach((otherAudio) => {
+      if (otherAudio !== audio) otherAudio.pause();
+    });
+    if (audio.paused) audio.play().catch((error) => console.error('Could not play sound', error));
+    else audio.pause();
+  });
+});
+
+document.querySelectorAll('[data-progress]').forEach((progress) => {
+  const audio = document.getElementById(progress.dataset.progress);
+  const syncProgress = () => {
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    progress.value = String((audio.currentTime / audio.duration) * 100);
+  };
+  audio.addEventListener('loadedmetadata', syncProgress);
+  audio.addEventListener('timeupdate', syncProgress);
+  progress.addEventListener('input', () => {
+    if (Number.isFinite(audio.duration) && audio.duration > 0) {
+      audio.currentTime = (Number(progress.value) / 100) * audio.duration;
+    }
+  });
+});
 
 butterflySlider.addEventListener('input', () => {
   const imageIndex = Number(butterflySlider.value) - 1;
-  updateButterflyStage();
   agents.forEach((agent) => {
     agent.wings.forEach((wing, side) => {
       wing.material.map = agent.textureSets[imageIndex][side];
@@ -135,7 +169,6 @@ butterflySlider.addEventListener('input', () => {
     });
   });
 });
-updateButterflyStage();
 
 Promise.all(BUTTERFLY_IMAGE_SETS.map(([folder, timestamps]) => Promise.all(timestamps.map((timestamp) => {
   const paddedTimestamp = timestamp.split('.').map((part, index) => index === 0 ? part : part.padStart(2, '0')).join('.');
